@@ -258,3 +258,58 @@ void resolveIntersections(
     corkMesh2CorkTriMesh(&cmIn0, out);
 }
 
+
+void CorkBooleanOperation(
+	float* pMeshAVertices,
+	unsigned int nMeshAVerticesCount,
+	unsigned int * pMeshATriangles,
+	unsigned int nMeshATrianglesCount,
+	float* pMeshBVertices,
+	unsigned int nMeshBVerticesCount,
+	unsigned int * pMeshBTriangles,
+	unsigned int nMeshBTrianglesCount,
+	float*& pMeshResultVertices,
+	unsigned int& nMeshResultVerticesCount,
+	unsigned int *& pMeshResultTriangles,
+	unsigned int& nMeshResultTrianglesCount,
+	unsigned int nBoolOpType)
+{
+	CorkTriMesh corkMeshA;
+	corkMeshA.n_triangles = nMeshATrianglesCount;
+	corkMeshA.n_vertices = nMeshAVerticesCount;
+	corkMeshA.vertices = pMeshAVertices;
+	corkMeshA.triangles = pMeshATriangles;
+
+	CorkTriMesh corkMeshB;
+	corkMeshB.n_triangles = nMeshBTrianglesCount;
+	corkMeshB.n_vertices = nMeshBVerticesCount;
+	corkMeshB.vertices = pMeshBVertices;
+	corkMeshB.triangles = pMeshBTriangles;
+
+	CorkTriMesh* pCorkMeshResult = new CorkTriMesh();
+	if (nBoolOpType == 1)
+	{
+		// result = A ^ B
+		computeIntersection(corkMeshA, corkMeshB, pCorkMeshResult);
+	}
+	else if (nBoolOpType == 2)
+	{
+		// result = A - B
+		computeDifference(corkMeshA, corkMeshB, pCorkMeshResult);
+	}
+	else if (nBoolOpType == 3)
+	{
+		// result = A U B
+		computeUnion(corkMeshA, corkMeshB, pCorkMeshResult);
+	}
+	else if (nBoolOpType == 4)
+	{
+		// result = A XOR B
+		computeSymmetricDifference(corkMeshA, corkMeshB, pCorkMeshResult);
+	}
+	pMeshResultVertices = pCorkMeshResult->vertices;
+	nMeshResultVerticesCount = pCorkMeshResult->n_vertices;
+	pMeshResultTriangles = pCorkMeshResult->triangles;
+	nMeshResultTrianglesCount = pCorkMeshResult->n_triangles;
+	pCorkMeshResult = nullptr;
+}

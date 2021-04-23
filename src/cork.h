@@ -34,16 +34,16 @@ typedef unsigned int uint;
 // function to free the allocated memory.
 struct CorkTriMesh
 {
-    uint    n_triangles;
-    uint    n_vertices;
-    uint    *triangles;
-    float   *vertices;
+	uint    n_triangles;
+	uint    n_vertices;
+	uint    *triangles;
+	float   *vertices;
 };
 
 void freeCorkTriMesh(CorkTriMesh *mesh);
 
 // the inputs to Boolean operations must be "solid":
-//  -   closed (aka. watertight; see comment at bottom)
+//  -   closed (aka. watertight; see comment at bottom)+
 //  -   non-self-intersecting
 // additionally, inputs should use a counter-clockwise convention
 // for triangle facing.  If the triangles are presented in clockwise
@@ -64,7 +64,7 @@ void computeIntersection(CorkTriMesh in0, CorkTriMesh in1, CorkTriMesh *out);
 
 // result = A XOR B
 void computeSymmetricDifference(
-                        CorkTriMesh in0, CorkTriMesh in1, CorkTriMesh *out);
+	CorkTriMesh in0, CorkTriMesh in1, CorkTriMesh *out);
 
 // Not a Boolean operation, but related:
 //  No portion of either surface is deleted.  However, the
@@ -72,3 +72,11 @@ void computeSymmetricDifference(
 //  such that the two surfaces are now connected.
 void resolveIntersections(CorkTriMesh in0, CorkTriMesh in1, CorkTriMesh *out);
 
+extern "C" __declspec(dllexport)void CorkBooleanOperation(
+	float* pMeshAVertices, unsigned int nMeshAVerticesCount,
+	unsigned int * pMeshATriangles, unsigned int nMeshATrianglesCount,
+	float* pMeshBVertices, unsigned int nMeshBVerticesCount,
+	unsigned int * pMeshBTriangles, unsigned int nMeshBTrianglesCount,
+	float*& pMeshResultVertices, unsigned int& nMeshResultVerticesCount,
+	unsigned int *& pMeshResultTriangles, unsigned int& nMeshResultTrianglesCount,
+	unsigned int nBoolOpType);
